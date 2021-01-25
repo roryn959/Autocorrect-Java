@@ -56,10 +56,34 @@ public class StringArray {
     }
 
     public void set(int index, String s){
-        if (index>=0 && index<this.getNumElements()) { //If index given is between 0 and (length of the list - 1) inclusive it's valid
+        if (index>=0 && index<this.getNumElements()) { //If index given is between 0 and (length of the list - 1) inclusive it's valid.
             this.array[index] = s;
             this.numElements++;
         }
-
     }
+
+    private void newArray(int size){ //Move the current array into one of a new size
+        String[] newArray = new String[size];
+        for (int i=0; i<this.numElements; i++){
+            newArray[i] = this.array[i];
+        }
+        this.numLimit = size;
+        this.array = newArray;
+    }
+
+    private void balance(){
+        if (this.numElements==this.numLimit){ //If array is full, double array size
+            this.newArray(this.numLimit*2);
+        }
+        else if (this.numElements*3 < this.numLimit && this.numLimit != 1){ //If the array is less than a third full,
+            this.newArray(this.numLimit/2);                             //half array size to a minimum of 1.
+        }
+    }
+
+    public void add(String s){
+        this.balance(); //Balance the array - if it's full, add space.
+        this.array[this.numElements] = s;
+        this.numElements++;
+    }
+
 }
