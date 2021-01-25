@@ -86,4 +86,14 @@ public class StringArray {
         this.numElements++;
     }
 
+    public void insert(int index, String s){
+        this.balance();
+        if (index>=0 && index <= this.numElements){
+            for (int i=this.numElements; i>index; i--){
+                this.array[i] = this.array[i-1];
+            }
+            this.array[index] = s;
+            this.numElements++;
+        }
+    }
 }
