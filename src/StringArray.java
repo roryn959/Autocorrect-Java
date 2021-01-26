@@ -1,5 +1,6 @@
 //Written by Rory Nicholas 25/01/2021
 //StringArray class to hold and manipulate an array of Strings.
+//HELLO BONG WATER
 
 public class StringArray {
     private String[] array; //The array to hold the strings.
