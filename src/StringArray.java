@@ -96,4 +96,24 @@ public class StringArray {
             this.numElements++;
         }
     }
+
+    public void remove(int index){
+        if (index>=0 && index<this.numElements) {
+            for (int i = index; i < this.numElements-1; i++) {
+                this.array[i] = this.array[i + 1];
+            }
+            this.numElements--;
+        }
+        this.balance();
+    }
+
+    public boolean contains(String s1){
+        for (int i=0; i<this.numElements; i++){
+            String s2 = this.array[i];
+            if (s1.compareToIgnoreCase(s2) == 0){
+                return true;
+            }
+        }
+        return false;
+    }
 }

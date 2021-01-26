@@ -1,24 +1,22 @@
 public class Tester {
     public static void main(String[] args) {
         StringArray myArray = new StringArray();
-        myArray.display();
+        myArray.remove(0);
         myArray.insert(0, "rah");
-        System.out.println(myArray.getNumLimit());
-        myArray.add("Hello");
-        System.out.println(myArray.getNumLimit());
+        myArray.remove(0);
         myArray.add("my");
-        System.out.println(myArray.getNumLimit());
         myArray.add("name");
-        System.out.println(myArray.getNumLimit());
-        myArray.add("name");
-        System.out.println(myArray.getNumLimit());
-        myArray.add("is");
-        System.out.println(myArray.getNumLimit());
         myArray.add("Rozza");
         myArray.insert(2, "skeet skeet");
         myArray.insert(4, "ya ya");
         myArray.insert(0, "get money");
+        myArray.add("err");
+        myArray.remove(0);
+        myArray.remove(3);
+        myArray.remove(2);
+        myArray.add("rozza");
         myArray.display();
-        System.out.println(myArray.getNumLimit());
+        System.out.println(myArray.contains("ROZZa"));
+        System.out.println(myArray.contains("rozz"));
     }
 }
