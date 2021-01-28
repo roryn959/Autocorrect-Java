@@ -1,6 +1,5 @@
 //Written by Rory Nicholas 25/01/2021
 //StringArray class to hold and manipulate an array of Strings.
-//HELLO BONG WATER
 
 public class StringArray {
     private String[] array; //The array to hold the strings.
@@ -116,5 +115,32 @@ public class StringArray {
             }
         }
         return false;
+    }
+    public boolean containsMatchingCase(String s1){
+        for (int i=0; i<this.numElements; i++){
+            String s2 = this.array[i];
+            if (s1.compareTo(s2) == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+    public int index(String s1){
+        for (int i=0; i<this.numElements; i++){
+            String s2 = this.array[i];
+            if (s1.compareToIgnoreCase(s2)==0){
+                return i;
+            }
+        }
+        return -1;
+    }
+    public int indexMatchingCase(String s1){
+        for (int i=0; i<this.numElements; i++){
+            String s2 = this.array[i];
+            if (s1.compareTo(s2)==0){
+                return i;
+            }
+        }
+        return -1;
     }
 }
