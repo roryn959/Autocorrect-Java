@@ -116,6 +116,7 @@ public class StringArray {
         }
         return false;
     }
+
     public boolean containsMatchingCase(String s1){
         for (int i=0; i<this.numElements; i++){
             String s2 = this.array[i];
@@ -125,6 +126,7 @@ public class StringArray {
         }
         return false;
     }
+
     public int index(String s1){
         for (int i=0; i<this.numElements; i++){
             String s2 = this.array[i];
@@ -134,6 +136,7 @@ public class StringArray {
         }
         return -1;
     }
+
     public int indexMatchingCase(String s1){
         for (int i=0; i<this.numElements; i++){
             String s2 = this.array[i];
