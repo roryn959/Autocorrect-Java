@@ -107,10 +107,30 @@ public class StringArray {
         this.balance();
     }
 
-    public boolean contains(String s1){
+    public boolean containsOld(String s1){
         for (int i=0; i<this.numElements; i++){
             String s2 = this.array[i];
             if (s1.compareToIgnoreCase(s2) == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean contains(String s1){
+        int left = 0;
+        int right = this.getNumElements()-1;
+
+        while (left <= right){
+            int middle = (left+right)/2;
+            int comparison = this.get(middle).compareTo(s1);
+            if (comparison < 0){
+                left = middle+1;
+            }
+            else if (comparison > 0){
+                right = middle-1;
+            }
+            else{
                 return true;
             }
         }

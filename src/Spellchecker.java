@@ -32,7 +32,7 @@ public class Spellchecker {
         StringArray errors = new StringArray();
         for (int i=0; i<this.text.getNumElements(); i++){
             String word = this.text.get(i);
-            if (!this.dictionary.contains(word)){
+            if (!this.dictionary.containsOld(word)){
                 errors.add(word);
             }
         }
