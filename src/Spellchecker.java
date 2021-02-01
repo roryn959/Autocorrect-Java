@@ -6,6 +6,7 @@ import java.lang.Math;
 public class Spellchecker {
     StringArray dictionary;
     StringArray text;
+    StringArray errors;
 
     private void generateDictionary(){
         this.dictionary = new StringArray();
@@ -41,21 +42,26 @@ public class Spellchecker {
         return errors;
     }
 
+    private void errorCheck(){
+
+        StringArray errors = this.findErrors();
+
+        for (int i=0; i<errors.getNumElements(); i++){
+            String error = errors.get(i);
+            System.out.println("Error found: " + error);
+            StringArray closest = this.dictionary.findClosestWords(error);
+            System.out.println("Possible replacements found: ");
+            closest.display();
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) {
         Spellchecker runner = new Spellchecker();
 
         runner.generateDictionary();
         runner.getText();
 
-        StringArray errors = runner.findErrors();
-
-        for (int i=0; i<errors.getNumElements(); i++){
-            String error = errors.get(i);
-            System.out.println("Error found: " + error);
-            StringArray closest = runner.dictionary.findClosestWords(error);
-            System.out.println("Possible replacements found: ");
-            closest.display();
-            System.out.println();
-        }
+        runner.errorCheck();
     }
 }

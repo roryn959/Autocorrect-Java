@@ -169,39 +169,45 @@ public class StringArray {
         return (this.indexMatchingCase(s) != -1);
     }
 
-    public int distance(String s1, String s2){ //Levenshtein algorithm for finding distance between two strings.
-
-        //System.out.println(s1 + "|" + s2);
-
+    public int distance(String s1, String s2){ //Levenshtein algorithm for difference between two words using 2D matrix.
         int length1 = s1.length();
         int length2 = s2.length();
 
-        //If length if either string is 0, distance is an insertion for every character of other string.
+        int cost;
 
-        if (length1==0){
-            return length2;
+        int[][] table = new int[length1+1][length2+1];
+
+        for (int i=0; i<=length1; i++){
+            table[i][0] = i;
         }
-        if (length2==0){
-            return length1;
-        }
-
-        String sub1 = s1.substring(1);
-        String sub2 = s2.substring(1);
-
-        if (s1.charAt(0) == s2.charAt(0)){
-            return this.distance(sub1, sub2);
+        for (int i=0; i<=length2; i++){
+            table[0][i] = i;
         }
 
-        return 1 + Math.min(this.distance(s1, sub2),
-                Math.min(this.distance(sub1, s2),
-                        this.distance(sub1, sub2)));
+        for (int j=1; j<=length2; j++){
+            for (int i=1; i<=length1; i++){
+
+                if (s1.charAt(i-1) == s2.charAt(j-1)){
+                    cost = 0;
+                }
+                else{
+                    cost = 1;
+                }
+
+                table[i][j] = Math.min(table[i-1][j]+1,
+                              Math.min(table[i][j-1]+1,
+                                       table[i-1][j-1] + cost));
+            }
+        }
+        return table[length1][length2];
     }
 
     public StringArray findClosestWords(String s){
         StringArray closest = new StringArray();
 
-        for (String word : this.array){
-            if (this.distance(s, word) < 2){
+        for (int i = 0; i<this.getNumElements(); i++){
+            String word = this.get(i);
+            if (this.distance(s, word)<2){
                 closest.add(word);
             }
         }
