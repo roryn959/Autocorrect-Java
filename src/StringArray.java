@@ -107,23 +107,14 @@ public class StringArray {
         this.balance();
     }
 
-    public boolean containsOld(String s1){
-        for (int i=0; i<this.numElements; i++){
-            String s2 = this.array[i];
-            if (s1.compareToIgnoreCase(s2) == 0){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean contains(String s1){
+    public int index(String s){
         int left = 0;
         int right = this.getNumElements()-1;
 
         while (left <= right){
-            int middle = (left+right)/2;
-            int comparison = this.get(middle).compareTo(s1);
+            int middle = (left + right) / 2;
+            int comparison = this.get(middle).compareToIgnoreCase(s);
+
             if (comparison < 0){
                 left = middle+1;
             }
@@ -131,39 +122,89 @@ public class StringArray {
                 right = middle-1;
             }
             else{
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean containsMatchingCase(String s1){
-        for (int i=0; i<this.numElements; i++){
-            String s2 = this.array[i];
-            if (s1.compareTo(s2) == 0){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public int index(String s1){
-        for (int i=0; i<this.numElements; i++){
-            String s2 = this.array[i];
-            if (s1.compareToIgnoreCase(s2)==0){
-                return i;
+                return middle;
             }
         }
         return -1;
     }
 
-    public int indexMatchingCase(String s1){
-        for (int i=0; i<this.numElements; i++){
-            String s2 = this.array[i];
-            if (s1.compareTo(s2)==0){
-                return i;
+    public int indexMatchingCase(String s){
+        //Binary search can be messed up by sporadic capitals in dictionary. Find index while
+        //ignoring case, and compare with surrounding words, as if the word has a valid capitalised
+        //word it should be next to or equal to the ignore case index.
+
+        int ignoreCaseIndex = this.index(s);
+
+        if (ignoreCaseIndex == -1){
+            return -1;
+        }
+
+        if (this.get(ignoreCaseIndex).equals(s)){ //If the word is at same index as ignore case index
+            return ignoreCaseIndex;
+        }
+
+        //The string at the ignore case index is not the same, so check surrounding words:
+
+        if (ignoreCaseIndex>0){ //Check word just before ignore case index. Make
+                                //sure it's not at the start of dictionary.
+            if (this.get(ignoreCaseIndex-1).equals(s)){
+                return ignoreCaseIndex-1;
             }
         }
+
+        if (ignoreCaseIndex<this.getNumElements()-2){ //Check word is not at end of dictionary
+            if (this.get(ignoreCaseIndex+1).equals(s)){
+                return ignoreCaseIndex+1;
+            }
+        }
+
         return -1;
+    }
+
+    public boolean contains(String s){
+        return (this.index(s) != -1);
+    }
+
+    public boolean containsMatchingCase(String s){
+        return (this.indexMatchingCase(s) != -1);
+    }
+
+    public int distance(String s1, String s2){ //Levenshtein algorithm for finding distance between two strings.
+
+        //System.out.println(s1 + "|" + s2);
+
+        int length1 = s1.length();
+        int length2 = s2.length();
+
+        //If length if either string is 0, distance is an insertion for every character of other string.
+
+        if (length1==0){
+            return length2;
+        }
+        if (length2==0){
+            return length1;
+        }
+
+        String sub1 = s1.substring(1);
+        String sub2 = s2.substring(1);
+
+        if (s1.charAt(0) == s2.charAt(0)){
+            return this.distance(sub1, sub2);
+        }
+
+        return 1 + Math.min(this.distance(s1, sub2),
+                Math.min(this.distance(sub1, s2),
+                        this.distance(sub1, sub2)));
+    }
+
+    public StringArray findClosestWords(String s){
+        StringArray closest = new StringArray();
+
+        for (String word : this.array){
+            if (this.distance(s, word) < 2){
+                closest.add(word);
+            }
+        }
+        return closest;
     }
 }

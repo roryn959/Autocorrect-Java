@@ -1,6 +1,8 @@
 //Written by Rory Nicholas 28/01/2021
 //Spellchecker class; checks spelling of text extract using given dictionary
 
+import java.lang.Math;
+
 public class Spellchecker {
     StringArray dictionary;
     StringArray text;
@@ -32,7 +34,7 @@ public class Spellchecker {
         StringArray errors = new StringArray();
         for (int i=0; i<this.text.getNumElements(); i++){
             String word = this.text.get(i);
-            if (!this.dictionary.containsOld(word)){
+            if (!this.dictionary.containsMatchingCase(word)){
                 errors.add(word);
             }
         }
@@ -46,7 +48,14 @@ public class Spellchecker {
         runner.getText();
 
         StringArray errors = runner.findErrors();
-        System.out.println("Found " + errors.getNumElements() + " errors. These are:");
-        errors.display();
+
+        for (int i=0; i<errors.getNumElements(); i++){
+            String error = errors.get(i);
+            System.out.println("Error found: " + error);
+            StringArray closest = runner.dictionary.findClosestWords(error);
+            System.out.println("Possible replacements found: ");
+            closest.display();
+            System.out.println();
+        }
     }
 }
