@@ -1,12 +1,9 @@
 //Written by Rory Nicholas 28/01/2021
 //Spellchecker class; checks spelling of text extract using given dictionary
 
-import java.lang.Math;
-
 public class Spellchecker {
     StringArray dictionary;
     StringArray text;
-    StringArray errors;
 
     private void generateDictionary(){
         this.dictionary = new StringArray();
