@@ -108,6 +108,24 @@ public class StringArray {
     }
 
     public int index(String s){
+        for (int i=0; i<this.getNumElements(); i++){
+            if (this.array[i].compareToIgnoreCase(s)==0){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int indexMatchingCase(String s){
+        for (int i=0; i<this.getNumElements(); i++){
+            if (this.array[i].compareTo(s)==0){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int indexAlpha(String s){ //Binary search can be used if it's in alphabetical order, like the dictionary
         int left = 0;
         int right = this.getNumElements()-1;
 
@@ -128,7 +146,7 @@ public class StringArray {
         return -1;
     }
 
-    public int indexMatchingCase(String s){
+    public int indexMatchingCaseAlpha(String s){
         //Binary search can be messed up by sporadic capitals in dictionary. Find index while
         //ignoring case, and compare with surrounding words, as if the word has a valid capitalised
         //word it should be next to or equal to the ignore case index.
@@ -215,6 +233,19 @@ public class StringArray {
     }
 
     public void replaceAll(String s1, String s2){   //Replace all instances of s1 with s2
-        int i;
+        if (s1 == null || s2 == null){
+            return;
+        }
+
+        int index;
+        while (true){
+            index = this.indexMatchingCase(s1);
+
+            if (index == -1){ //If there are no more instances of the string to replace in the array
+                return;
+            }
+
+            this.array[index] = s2;
+        }
     }
 }

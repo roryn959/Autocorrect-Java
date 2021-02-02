@@ -1,6 +1,10 @@
 //Written by Rory Nicholas 28/01/2021
 //Spellchecker class; checks spelling of text extract using given dictionary
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Spellchecker {
     StringArray dictionary;
     StringArray text;
@@ -38,7 +42,7 @@ public class Spellchecker {
         this.errors = new StringArray();
         for (int i=0; i<this.text.getNumElements(); i++){
             String word = this.text.get(i);
-            if (!this.dictionary.containsMatchingCase(word)){
+            if (this.dictionary.indexMatchingCaseAlpha(word) == -1){    //If word is not in dictionary. Use special binary search for speed.
                 this.errors.add(word);
             }
         }
@@ -50,6 +54,7 @@ public class Spellchecker {
         int choice;
 
         System.out.println("Suggested corrections:");
+
         while (closest.getNumElements() > 0){ //While there are still more suggestions to give
             for (int i=0; i<5 && i<closest.getNumElements(); i++){
                 System.out.println(i + ": " + closest.get(i));
@@ -89,13 +94,51 @@ public class Spellchecker {
             System.out.println("Error found: " + error);
 
             closest = this.dictionary.findClosestWords(error);
+
             if (closest.getNumElements() == 0){
                 System.out.println("Sorry, we couldn't find any suggestions for this error.\n");
             }
+
             else{
                 correction = this.getCorrection(closest);
                 System.out.println("Correction chosen: " + correction + "\n");
+                this.text.replaceAll(error, correction);
             }
+        }
+    }
+
+    public void fixFile(){
+        File newFile = new File("corrected_text.txt");
+        newFile.delete(); //Delete any file named this first
+
+        //Create a new blank file
+        try{
+            if (newFile.createNewFile()){
+                System.out.println("File created successfully");
+            }
+            else{
+                System.out.println("Error - file already exists");
+                return;
+            }
+        } catch (IOException error){
+            System.out.println("An error occurred in the reading of the file.");
+            error.printStackTrace();
+            return;
+        }
+
+        //Write to the new blank file
+        try {
+            FileWriter writeFile = new FileWriter("corrected_text.txt");
+
+            for (int i=0; i<this.text.getNumElements(); i++){
+                writeFile.write(this.text.get(i) + " ");
+            }
+
+            writeFile.close();
+            System.out.println("Successfully fixed errors and wrote to file.");
+
+        } catch (IOException error) {
+            System.out.println("An error occurred in the writing of the file.");
         }
     }
 
@@ -114,5 +157,7 @@ public class Spellchecker {
 
         runner.findErrors();
         runner.fixErrors();
+
+        runner.fixFile();
     }
 }
