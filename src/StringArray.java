@@ -213,4 +213,8 @@ public class StringArray {
         }
         return closest;
     }
+
+    public void replaceAll(String s1, String s2){   //Replace all instances of s1 with s2
+        int i;
+    }
 }

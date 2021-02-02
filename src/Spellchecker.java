@@ -4,8 +4,10 @@
 public class Spellchecker {
     StringArray dictionary;
     StringArray text;
+    StringArray errors;
+    static Input input = new Input();
 
-    private void generateDictionary(){
+    private void generateDictionary(){     //Gets dictionary and converts into StringArray
         this.dictionary = new StringArray();
         FileInput dictFile = new FileInput("dictionary");
 
@@ -13,9 +15,11 @@ public class Spellchecker {
             String s = dictFile.nextLine();
             this.dictionary.add(s);
         }
+
+        dictFile.close();
     }
 
-    private void getText(){
+    private void getText(){     //Gets text file and converts to StringArray
         this.text = new StringArray();
         FileInput textFile = new FileInput("text.txt");
 
@@ -26,39 +30,89 @@ public class Spellchecker {
                 this.text.add(word);
             }
         }
+
+        textFile.close();
     }
 
-    private StringArray findErrors(){
-        StringArray errors = new StringArray();
+    private StringArray findErrors(){   //Finds all misspelled words in file
+        this.errors = new StringArray();
         for (int i=0; i<this.text.getNumElements(); i++){
             String word = this.text.get(i);
             if (!this.dictionary.containsMatchingCase(word)){
-                errors.add(word);
+                this.errors.add(word);
             }
         }
-        return errors;
+        return this.errors;
     }
 
-    private void errorCheck(){
 
-        StringArray errors = this.findErrors();
+    private String getCorrection(StringArray closest){
+        int choice;
 
-        for (int i=0; i<errors.getNumElements(); i++){
-            String error = errors.get(i);
+        System.out.println("Suggested corrections:");
+        while (closest.getNumElements() > 0){ //While there are still more suggestions to give
+            for (int i=0; i<5 && i<closest.getNumElements(); i++){
+                System.out.println(i + ": " + closest.get(i));
+            }
+
+            choice = input.nextInt();
+
+            if (choice>=0 && choice<5 && choice<closest.getNumElements()){ //If the choice is within the given range
+                return closest.get(choice);
+            }
+
+            else if (choice == 6){ //If they request more suggestions, remove those shown
+                for (int j=0; j<5; j++){
+                    closest.remove(0);
+                }
+            }
+
+            else if (choice == 7){ //If they request to quit
+                return null;
+            }
+
+            else{
+                System.out.println("Invalid choice");
+            }
+        }
+        System.out.println("Sorry, there are no more suggested corrections. Leaving word as it is.");
+        return null;
+    }
+
+    private void fixErrors(){     //Finds closest suggestions for each error found and suggests alternatives.
+        String error;
+        StringArray closest;
+        String correction;
+
+        for (int i=0; i<this.errors.getNumElements(); i++){
+            error = this.errors.get(i);
             System.out.println("Error found: " + error);
-            StringArray closest = this.dictionary.findClosestWords(error);
-            System.out.println("Possible replacements found: ");
-            closest.display();
-            System.out.println();
+
+            closest = this.dictionary.findClosestWords(error);
+            if (closest.getNumElements() == 0){
+                System.out.println("Sorry, we couldn't find any suggestions for this error.\n");
+            }
+            else{
+                correction = this.getCorrection(closest);
+                System.out.println("Correction chosen: " + correction + "\n");
+            }
         }
     }
 
     public static void main(String[] args) {
         Spellchecker runner = new Spellchecker();
 
+        System.out.println("\nThis program will take a text and spell-check it, suggesting corrections." +
+                "\nIt will show suggestions five at a time, or however many are left." +
+                "\nTyping '6' will generate more suggestions for you if there are any, and typing '7' will stop suggesting changes." +
+                "\nTyping a number within the range will correct any instances of that word in your text." +
+                "\n\nPress enter when ready:");
+
+        input.nextLine();
         runner.generateDictionary();
         runner.getText();
 
-        runner.errorCheck();
+        runner.findErrors();
+        runner.fixErrors();
     }
 }
