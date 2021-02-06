@@ -29,8 +29,9 @@ public class Spellchecker {
 
         while (textFile.hasNextLine()){
             String currentLine = textFile.nextLine();
-            String[] words = currentLine.split("[^a-zA-Z-]+");
-            for (String word : words){
+
+            //Splits words in line up, keeping alphanumeric characters and hyphens. Iterates through each word.
+            for (String word : currentLine.split("[^a-zA-Z-]+")){
                 this.text.add(word);
             }
         }
@@ -56,28 +57,28 @@ public class Spellchecker {
         System.out.println("Suggested corrections:");
 
         while (closest.getNumElements() > 0){ //While there are still more suggestions to give
-            for (int i=0; i<5 && i<closest.getNumElements(); i++){
+            for (int i=0; i<5 && i<closest.getNumElements(); i++){      //Show suggestions five at a time.
                 System.out.println(i + ": " + closest.get(i));
             }
 
             choice = input.nextInt();
 
-            if (choice>=0 && choice<5 && choice<closest.getNumElements()){ //If the choice is within the given range
+            if (choice>=0 && choice<5 && choice<closest.getNumElements()){ //If the choice is within the given range.
                 return closest.get(choice);
             }
 
-            else if (choice == 6){ //If they request more suggestions, remove those shown
+            else if (choice == 5){ //If they request more suggestions, remove those shown
                 for (int j=0; j<5; j++){
                     closest.remove(0);
                 }
             }
 
-            else if (choice == 7){ //If they request to quit
+            else if (choice == 6){ //If they request to quit
                 return null;
             }
 
             else{
-                System.out.println("Invalid choice");
+                System.out.println("\nInvalid choice\n");
             }
         }
         System.out.println("Sorry, there are no more suggested corrections. Leaving word as it is.");
@@ -98,11 +99,15 @@ public class Spellchecker {
             if (closest.getNumElements() == 0){
                 System.out.println("Sorry, we couldn't find any suggestions for this error.\n");
             }
-
             else{
                 correction = this.getCorrection(closest);
-                System.out.println("Correction chosen: " + correction + "\n");
-                this.text.replaceAll(error, correction);
+                if (correction == null){
+                    System.out.println("No correction chosen.\n");
+                }
+                else {
+                    System.out.println("Correction chosen: " + correction + "\n");
+                    this.text.replaceAll(error, correction);
+                }
             }
         }
     }
@@ -147,7 +152,7 @@ public class Spellchecker {
 
         System.out.println("\nThis program will take a text and spell-check it, suggesting corrections." +
                 "\nIt will show suggestions five at a time, or however many are left." +
-                "\nTyping '6' will generate more suggestions for you if there are any, and typing '7' will stop suggesting changes." +
+                "\nTyping '5' will generate more suggestions for you if there are any, and typing '6' will stop suggesting changes for this word." +
                 "\nTyping a number within the range will correct any instances of that word in your text." +
                 "\n\nPress enter when ready:");
 
