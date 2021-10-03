@@ -1,4 +1,4 @@
-Spellchecker
+Spellchecker\n
 To run:
 1. Navigate into the file called "src"
 2. Write text into the file called "text.txt". One should exist but if not, create one in "src".
