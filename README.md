@@ -1,5 +1,7 @@
 # Spellchecker
 
+This program will help a user spellcheck a piece of text by finding errors, suggesting corrections, and then compiling a corrected version in a new text file.
+
 > To run:
 > 1. Navigate into the file called 'src'
 > 2. Write text into the file called 'text.txt'.
